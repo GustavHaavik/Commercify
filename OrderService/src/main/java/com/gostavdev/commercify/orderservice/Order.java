@@ -61,7 +61,7 @@ public class Order {
         return quantity;
     }
 
-    public double getTotalPrice() {
+    public BigDecimal getTotalPrice() {
         return totalPrice;
     }
 

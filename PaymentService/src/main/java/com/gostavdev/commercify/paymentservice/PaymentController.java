@@ -1,32 +1,41 @@
 package com.gostavdev.commercify.paymentservice;
 
+import com.stripe.exception.StripeException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/payments")
 public class PaymentController {
 
     private final PaymentService paymentService;
-    private final RestTemplate restTemplate;
 
-    public PaymentController(PaymentService paymentService, RestTemplate restTemplate) {
+    public PaymentController(PaymentService paymentService) {
         this.paymentService = paymentService;
-        this.restTemplate = restTemplate;
     }
 
-    // Endpoint to process a payment
-    @PostMapping("/process")
-    public ResponseEntity<Payment> processPayment(@RequestBody PaymentRequest paymentRequest) {
-        Payment payment = paymentService.processPayment(paymentRequest.getOrderId(), paymentRequest.getAmount(), paymentRequest.getPaymentMethod());
+    // Endpoint to initiate a payment with Stripe
+    @PostMapping("/create-payment-intent")
+    public ResponseEntity<Map<String, Object>> createPaymentIntent(@RequestBody PaymentRequest paymentRequest) {
+        try {
+            Map<String, Object> response = paymentService.processStripePayment(
+                    paymentRequest.getOrderId(),
+                    paymentRequest.getAmount(),
+                    paymentRequest.getCurrency()
+            );
+            return ResponseEntity.ok(response);
+        } catch (StripeException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
 
-        Long orderId = paymentRequest.getOrderId();
-
-        // After successful payment
-        restTemplate.postForObject("http://ORDER-SERVICE/orders/" + orderId + "/status", new OrderStatusUpdate("PAID"), Void.class);
-
-        return ResponseEntity.ok(payment);
+    // Endpoint to update payment status (if needed)
+    @PostMapping("/{orderId}/update-status")
+    public ResponseEntity<Void> updatePaymentStatus(@PathVariable Long orderId, @RequestBody PaymentStatusRequest request) {
+        paymentService.updatePaymentStatus(orderId, request.getStatus());
+        return ResponseEntity.ok().build();
     }
 
     // Endpoint to get the status of a payment

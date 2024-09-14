@@ -3,7 +3,7 @@ package com.gostavdev.commercify.paymentservice;
 public class PaymentRequest {
     private Long orderId;
     private Double amount;
-    private String paymentMethod; // Credit Card, PayPal, etc.
+    private String currency;
 
     public Long getOrderId() {
         return orderId;
@@ -21,11 +21,11 @@ public class PaymentRequest {
         this.amount = amount;
     }
 
-    public String getPaymentMethod() {
-        return paymentMethod;
+    public String getCurrency() {
+        return currency;
     }
 
-    public void setPaymentMethod(String paymentMethod) {
-        this.paymentMethod = paymentMethod;
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 }

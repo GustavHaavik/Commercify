@@ -1,9 +1,9 @@
 package com.gostavdev.commercify.paymentservice;
 
-public class PaymentStatusRequest {
+public class PaymentResponse {
     private PaymentStatus status;
 
-    public PaymentStatusRequest(PaymentStatus status) {
+    public PaymentResponse(PaymentStatus status) {
         this.status = status;
     }
 
@@ -15,3 +15,4 @@ public class PaymentStatusRequest {
         this.status = status;
     }
 }
+

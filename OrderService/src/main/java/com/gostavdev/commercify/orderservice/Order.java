@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import org.aspectj.weaver.ast.Or;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -18,7 +19,7 @@ public class Order {
     private Long productId;
     private int quantity;
     private BigDecimal totalPrice;
-    private String status; // new, processing, completed, cancelled
+    private OrderStatus status; // new, processing, completed, cancelled
     private LocalDateTime orderDate;
 
     public void setProductId(Long productId) {
@@ -37,7 +38,7 @@ public class Order {
         this.totalPrice = totalPrice;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(OrderStatus status) {
         this.status = status;
     }
 
@@ -65,7 +66,7 @@ public class Order {
         return totalPrice;
     }
 
-    public String getStatus() {
+    public OrderStatus getStatus() {
         return status;
     }
 

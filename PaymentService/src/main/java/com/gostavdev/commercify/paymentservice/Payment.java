@@ -16,20 +16,19 @@ public class Payment {
     private Long orderId; // The ID of the associated order
     private Double amount;
     private String paymentMethod; // e.g., Credit Card, PayPal
-    private String status; // e.g., PENDING, COMPLETED, FAILED
+    private PaymentStatus status; // e.g., PENDING, COMPLETED, FAILED
 
     private LocalDateTime paymentDate;
 
-    public Payment() {
-    }
-
-    public Payment(Long orderId, Double amount, String paymentMethod, String status, LocalDateTime paymentDate) {
+    public Payment(Long orderId, Double amount, String paymentMethod, PaymentStatus status, LocalDateTime paymentDate) {
         this.orderId = orderId;
         this.amount = amount;
         this.paymentMethod = paymentMethod;
         this.status = status;
         this.paymentDate = paymentDate;
     }
+
+    public Payment() {}
 
     public Long getId() {
         return id;
@@ -47,11 +46,11 @@ public class Payment {
         return paymentMethod;
     }
 
-    public String getStatus() {
+    public PaymentStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(PaymentStatus status) {
         this.status = status;
     }
 

@@ -1,8 +1,5 @@
 package com.gostavdev.commercify.orderservice;
 
-import com.gostavdev.commercify.productsservice.Product;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -30,7 +27,7 @@ public class OrderService {
 
     public Order createOrder(Order order) {
         // Check product availability by calling Product Service
-        Product product = restTemplate.getForObject("http://PRODUCT-SERVICE/products/" + order.getProductId(), Product.class);
+        ProductDto product = restTemplate.getForObject("http://PRODUCT-SERVICE/products/" + order.getProductId(), ProductDto.class);
         if (product == null || product.getQuantity() < order.getQuantity()) {
             throw new RuntimeException("Product not available or insufficient quantity");
         }
@@ -38,19 +35,19 @@ public class OrderService {
         // Calculate total price
         order.setTotalPrice(product.getPrice().multiply(BigDecimal.valueOf(order.getQuantity())));
         order.setOrderDate(LocalDateTime.now());
-        order.setStatus("PENDING");
+        order.setStatus(OrderStatus.PENDING);
 
         // Save order
         Order savedOrder = orderRepository.save(order);
 
         // Communicate with Payment Service to process payment (simplified)
-        PaymentRequest paymentRequest = new PaymentRequest(savedOrder.getId(), savedOrder.getTotalPrice(), order.getUserId());
-        restTemplate.postForObject("http://PAYMENT-SERVICE/payments", paymentRequest, PaymentResponse.class);
+        PaymentRequest paymentRequest = new PaymentRequest(savedOrder.getId(), savedOrder.getTotalPrice().doubleValue(), "USD");
+        restTemplate.postForObject("http://PAYMENT-SERVICE/create-payment-intent", paymentRequest, PaymentResponse.class);
 
         return savedOrder;
     }
 
-    public void updateOrderStatus(Long orderId, String status) {
+    public void updateOrderStatus(Long orderId, OrderStatus status) {
         Order order;
         try {
             order = getOrderById(orderId);

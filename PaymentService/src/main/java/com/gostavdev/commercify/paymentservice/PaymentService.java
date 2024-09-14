@@ -1,7 +1,11 @@
 package com.gostavdev.commercify.paymentservice;
 
+import com.gostavdev.commercify.paymentservice.exceptions.InvalidEventDataException;
+import com.gostavdev.commercify.paymentservice.exceptions.PaymentNotFoundException;
 import com.stripe.exception.StripeException;
+import com.stripe.model.Event;
 import com.stripe.model.PaymentIntent;
+import com.stripe.model.StripeObject;
 import com.stripe.param.PaymentIntentCreateParams;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +39,7 @@ public class PaymentService {
         PaymentIntent paymentIntent = PaymentIntent.create(params);
 
         // Save the payment in our local database with status "PENDING"
-        Payment payment = new Payment(orderId, amount, "Stripe", "PENDING", LocalDateTime.now());
+        Payment payment = new Payment(orderId, amount, "Stripe", PaymentStatus.PENDING, LocalDateTime.now());
         paymentRepository.save(payment);
 
         // Return the payment intent's client secret for client-side confirmation
@@ -45,8 +49,8 @@ public class PaymentService {
     }
 
     // Update payment status after confirmation (if needed)
-    public void updatePaymentStatus(Long orderId, String status) {
-        Payment payment = paymentRepository.findByOrderId(orderId).orElseThrow(() -> new RuntimeException("Payment not found"));
+    public void updatePaymentStatus(Long orderId, PaymentStatus status) throws PaymentNotFoundException {
+        Payment payment = paymentRepository.findByOrderId(orderId).orElseThrow(() -> new PaymentNotFoundException("Payment not found"));
         payment.setStatus(status);
         paymentRepository.save(payment);
     }
@@ -54,14 +58,14 @@ public class PaymentService {
     // Process a new payment
     public Payment processPayment(Long orderId, Double amount, String paymentMethod) {
         // Assume payment is successful (real implementation will involve actual payment gateway)
-        Payment payment = new Payment(orderId, amount, paymentMethod, "COMPLETED", LocalDateTime.now());
+        Payment payment = new Payment(orderId, amount, paymentMethod, PaymentStatus.PAID, LocalDateTime.now());
         return paymentRepository.save(payment);
     }
 
     // Get payment status by orderId
-    public String getPaymentStatus(Long orderId) {
+    public PaymentStatus getPaymentStatus(Long orderId) {
         Optional<Payment> payment = paymentRepository.findByOrderId(orderId);
-        return payment.map(Payment::getStatus).orElse("Payment not found");
+        return payment.map(Payment::getStatus).orElse(PaymentStatus.NOT_FOUND);
     }
 
     // Refund payment (for simplicity, assume refund always succeeds)
@@ -69,10 +73,42 @@ public class PaymentService {
         Optional<Payment> paymentOpt = paymentRepository.findByOrderId(orderId);
         if (paymentOpt.isPresent()) {
             Payment payment = paymentOpt.get();
-            payment.setStatus("REFUNDED");
+            payment.setStatus(PaymentStatus.REFUNDED);
             return paymentRepository.save(payment);
         }
         throw new PaymentNotFoundException("Payment not found for order ID: " + orderId);
     }
 
+    // Handle successful payments
+    public void handlePaymentSucceeded(Event event) {
+        // Extract the PaymentIntent object from the event
+        Optional<StripeObject> dataObject = event.getDataObjectDeserializer().getObject();
+        if (dataObject.isEmpty() || !(dataObject.get() instanceof PaymentIntent paymentIntent))
+            throw new InvalidEventDataException("Invalid event data object");
+
+        Long orderId = Long.parseLong(paymentIntent.getMetadata().get("orderId"));
+
+        // Update payment status in the database
+        Optional<Payment> paymentOpt = paymentRepository.findByOrderId(orderId);
+        if (paymentOpt.isPresent()) {
+            Payment payment = paymentOpt.get();
+            payment.setStatus(PaymentStatus.PAID);
+            paymentRepository.save(payment);
+        }
+    }
+
+    // Handle failed payments
+    public void handlePaymentFailed(Event event) {
+        PaymentIntent paymentIntent = (PaymentIntent) event.getDataObjectDeserializer().getObject().get();
+
+        Long orderId = Long.parseLong(paymentIntent.getMetadata().get("orderId"));
+
+        // Update payment status in the database
+        Optional<Payment> paymentOpt = paymentRepository.findByOrderId(orderId);
+        if (paymentOpt.isPresent()) {
+            Payment payment = paymentOpt.get();
+            payment.setStatus(PaymentStatus.FAILED);
+            paymentRepository.save(payment);
+        }
+    }
 }

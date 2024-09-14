@@ -1,6 +1,7 @@
 package com.gostavdev.commercify.orderservice;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,11 @@ public class OrderController {
 
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
+    }
+
+    @GetMapping("/test")
+    public String test() {
+        return "Order Service is up and running!";
     }
 
     // Endpoint to create a new order
@@ -32,14 +38,25 @@ public class OrderController {
     // Endpoint to fetch an order by ID
     @GetMapping("/{id}")
     public ResponseEntity<Order> getOrderById(@PathVariable Long id) {
-        Order order = orderService.getOrderById(id);
+        Order order;
+        try {
+            order = orderService.getOrderById(id);
+        } catch (RuntimeException e) {
+            return ResponseEntity.internalServerError().body(new Order());
+        }
         return ResponseEntity.ok(order);
     }
 
     // Endpoint to update order status
     @PutMapping("/{id}/status")
     public ResponseEntity<Void> updateOrderStatus(@PathVariable Long id, @RequestBody String status) {
-        orderService.updateOrderStatus(id, status);
+        OrderStatus orderStatus;
+        try {
+            orderStatus = OrderStatus.valueOf(status.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException(e);
+        }
+        orderService.updateOrderStatus(id, orderStatus);
         return ResponseEntity.ok().build();
     }
 }

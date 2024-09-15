@@ -2,6 +2,8 @@ package com.gostavdev.commercify.paymentservice;
 
 import com.gostavdev.commercify.paymentservice.exceptions.InvalidEventDataException;
 import com.gostavdev.commercify.paymentservice.exceptions.PaymentNotFoundException;
+import com.gostavdev.commercify.paymentservice.model.Payment;
+import com.gostavdev.commercify.paymentservice.model.PaymentStatus;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Event;
 import com.stripe.model.PaymentIntent;

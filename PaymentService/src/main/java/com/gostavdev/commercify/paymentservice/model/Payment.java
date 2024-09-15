@@ -1,4 +1,4 @@
-package com.gostavdev.commercify.paymentservice;
+package com.gostavdev.commercify.paymentservice.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

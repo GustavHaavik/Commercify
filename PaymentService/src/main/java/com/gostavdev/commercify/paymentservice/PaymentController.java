@@ -1,6 +1,10 @@
 package com.gostavdev.commercify.paymentservice;
 
 import com.gostavdev.commercify.paymentservice.exceptions.PaymentNotFoundException;
+import com.gostavdev.commercify.paymentservice.model.Payment;
+import com.gostavdev.commercify.paymentservice.model.PaymentRequest;
+import com.gostavdev.commercify.paymentservice.model.PaymentStatus;
+import com.gostavdev.commercify.paymentservice.model.PaymentStatusRequest;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Event;
 import com.stripe.net.Webhook;
@@ -85,6 +89,7 @@ public class PaymentController {
         try {
             paymentService.updatePaymentStatus(orderId, request.getStatus());
         } catch (PaymentNotFoundException e) {
+            ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
             throw new RuntimeException(e);
         }
         return ResponseEntity.ok().build();
@@ -104,8 +109,14 @@ public class PaymentController {
         try {
             payment = paymentService.refundPayment(orderId);
         } catch (PaymentNotFoundException e) {
+            ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
             throw new RuntimeException(e);
         }
         return ResponseEntity.ok(payment);
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<String> test() {
+        return ResponseEntity.ok("Payment service is up and running!");
     }
 }

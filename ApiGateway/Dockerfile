@@ -1,6 +1,6 @@
 FROM openjdk:17-jdk-slim
 VOLUME /tmp
 EXPOSE 8080
-ARG JAR_FILE=target/@project.artifactId@-@project.version@.jar
-ADD ${JAR_FILE} @project.artifactId@y.jar
-ENTRYPOINT ["java", "-jar", "/@project.artifactId@.jar"]
+ARG JAR_FILE=target/ApiGateway.jar
+COPY ${JAR_FILE} app.jar
+ENTRYPOINT ["java","-jar","/app.jar"]

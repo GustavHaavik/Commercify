@@ -1,4 +1,4 @@
-package com.gostavdev.commercify.paymentservice;
+package com.gostavdev.commercify.paymentservice.model;
 
 public class PaymentRequest {
     private Long orderId;

@@ -16,7 +16,7 @@ VOLUME /tmp
 EXPOSE 8084
 
 # Copy the jar file from the build stage
-COPY --from=build /app/target/DiscoveryService.jar /app.jar
+COPY --from=build /app/target/DiscoveryServer.jar /app.jar
 
 # Run the jar file
 ENTRYPOINT ["java", "-jar", "/app.jar"]

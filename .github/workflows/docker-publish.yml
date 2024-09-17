@@ -29,39 +29,27 @@ jobs:
 
       # Build the Spring Boot applications using Maven
       - name: Build payment-service JAR
-        run: |
-          cd PaymentsService
-          mvn clean package -DskipTests
+        run: mvn clean package -DskipTests
         working-directory: PaymentsService
 
       - name: Build product-service JAR
-        run: |
-          cd ProductsService
-          mvn clean package -DskipTests
+        run: mvn clean package -DskipTests
         working-directory: ProductsService
 
       - name: Build order-service JAR
-        run: |
-          cd OrderSerivce
-          mvn clean package -DskipTests
-        working-directory: OrderSerivce
+        run: mvn clean package -DskipTests
+        working-directory: OrderService
 
       - name: Build user-service JAR
-        run: |
-          cd UserService
-          mvn clean package -DskipTests
+        run: mvn clean package -DskipTests
         working-directory: UserService
 
       - name: Build discovery-server JAR
-        run: |
-          cd DiscoveryServer
-          mvn clean package -DskipTests
+        run: mvn clean package -DskipTests
         working-directory: DiscoveryServer
 
       - name: Build api-gateway JAR
-        run: |
-          cd ApiGateway
-          mvn clean package -DskipTests
+        run: mvn clean package -DskipTests
         working-directory: ApiGateway
 
       # Set up Docker Buildx
@@ -70,30 +58,30 @@ jobs:
 
       - name: Build and push discovery-server image
         run: |
-          docker build -t ghcr.io/${{ github.repository }}/discovery-server:latest ./DiscoveryServer
-          docker push ghcr.io/${{ github.repository }}/discovery-server:latest
+          docker build -t ghcr.io/${{ github.repository }}/commercify_discoveryserver:latest ./DiscoveryServer
+          docker push ghcr.io/${{ github.repository }}/commercify_discoveryserver:latest
 
       - name: Build and push api-gateway image
         run: |
-          docker build -t ghcr.io/${{ github.repository }}/api-gateway:latest ./ApiGateway
-          docker push ghcr.io/${{ github.repository }}/api-gateway:latest
+          docker build -t ghcr.io/${{ github.repository }}/commercify_apigateway:latest ./ApiGateway
+          docker push ghcr.io/${{ github.repository }}/commercify_apigateway:latest
 
       - name: Build and push payment-service image
         run: |
-          docker build -t ghcr.io/${{ github.repository }}/payment-service:latest ./PaymentsService
-          docker push ghcr.io/${{ github.repository }}/payment-service:latest
+          docker build -t ghcr.io/${{ github.repository }}/commercify_payments:latest ./PaymentsService
+          docker push ghcr.io/${{ github.repository }}/commercify_payments:latest
 
       - name: Build and push product-service image
         run: |
-          docker build -t ghcr.io/${{ github.repository }}/product-service:latest ./ProductsService
-          docker push ghcr.io/${{ github.repository }}/product-service:latest
+          docker build -t ghcr.io/${{ github.repository }}/commercify_products:latest ./ProductsService
+          docker push ghcr.io/${{ github.repository }}/commercify_products:latest
 
       - name: Build and push order-service image
         run: |
-          docker build -t ghcr.io/${{ github.repository }}/order-service:latest ./OrderSerivce
-          docker push ghcr.io/${{ github.repository }}/order-service:latest
+          docker build -t ghcr.io/${{ github.repository }}/commercify_orders:latest ./OrderService
+          docker push ghcr.io/${{ github.repository }}/commercify_orders:latest
 
       - name: Build and push user-service image
         run: |
-          docker build -t ghcr.io/${{ github.repository }}/user-service:latest ./UserService
-          docker push ghcr.io/${{ github.repository }}/user-service:latest
+          docker build -t ghcr.io/${{ github.repository }}/commercify_users:latest ./UserService
+          docker push ghcr.io/${{ github.repository }}/commercify_users:latest

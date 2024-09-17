@@ -23,7 +23,7 @@ services:
     build:
       context: ./DiscoveryServer
       dockerfile: Dockerfile
-    container_name: discovery-server
+    container_name: commercify_discoveryserver
     ports:
       - "8761:8761"
     networks:
@@ -33,7 +33,7 @@ services:
     build:
       context: ./OrderService
       dockerfile: Dockerfile
-    container_name: order-service
+    container_name: commercify_orders
     ports:
       - "8081:8081"
     environment:
@@ -54,7 +54,7 @@ services:
     build:
       context: ./PaymentService
       dockerfile: Dockerfile
-    container_name: payment-service
+    container_name: commercify_payments
     ports:
       - "8082:8082"
     environment:
@@ -75,7 +75,7 @@ services:
     build:
       context: ./ProductsService
       dockerfile: Dockerfile
-    container_name: product-service
+    container_name: commercify_products
     ports:
       - "8083:8083"
     environment:
@@ -96,7 +96,7 @@ services:
     build:
       context: ./UserService
       dockerfile: Dockerfile
-    container_name: user-service
+    container_name: commercify_users
     ports:
       - "8084:8084"
     environment:
@@ -117,7 +117,7 @@ services:
     build:
       context: ./ApiGateway
       dockerfile: Dockerfile
-    container_name: api-gateway
+    container_name: commercify_apigateway
     ports:
       - "8080:8080"
     environment:

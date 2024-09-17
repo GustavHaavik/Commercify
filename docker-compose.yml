@@ -20,9 +20,7 @@ services:
       retries: 6
 
   discovery-server:
-    build:
-      context: ./DiscoveryServer
-      dockerfile: Dockerfile
+    image: ghcr.io/gustavhaavik/commercify_discoveryserver:latest
     container_name: commercify_discoveryserver
     ports:
       - "8761:8761"
@@ -30,9 +28,7 @@ services:
       - spring-net
 
   order-service:
-    build:
-      context: ./OrderService
-      dockerfile: Dockerfile
+    image: ghcr.io/gustavhaavik/commercify_orders:latest
     container_name: commercify_orders
     ports:
       - "8081:8081"
@@ -51,9 +47,7 @@ services:
       - spring-net
 
   payment-service:
-    build:
-      context: ./PaymentService
-      dockerfile: Dockerfile
+    image: ghcr.io/gustavhaavik/commercify_payments:latest
     container_name: commercify_payments
     ports:
       - "8082:8082"
@@ -72,9 +66,7 @@ services:
       - spring-net
 
   product-service:
-    build:
-      context: ./ProductsService
-      dockerfile: Dockerfile
+    image: ghcr.io/gustavhaavik/commercify_products:latest
     container_name: commercify_products
     ports:
       - "8083:8083"
@@ -93,9 +85,7 @@ services:
       - spring-net
 
   user-service:
-    build:
-      context: ./UserService
-      dockerfile: Dockerfile
+    image: ghcr.io/gustavhaavik/commercify_users:latest
     container_name: commercify_users
     ports:
       - "8084:8084"
@@ -114,9 +104,7 @@ services:
       - spring-net
 
   api-gateway:
-    build:
-      context: ./ApiGateway
-      dockerfile: Dockerfile
+    image: ghcr.io/gustavhaavik/commercify_apigateway:latest
     container_name: commercify_apigateway
     ports:
       - "8080:8080"

@@ -68,7 +68,7 @@ jobs:
 
       - name: Build and push payment-service image
         run: |
-          docker build -t ghcr.io/gustavhaavik/commercify_payments:latest ./PaymentsService
+          docker build -t ghcr.io/gustavhaavik/commercify_payments:latest ./PaymentService
           docker push ghcr.io/gustavhaavik/commercify_payments:latest
 
       - name: Build and push product-service image

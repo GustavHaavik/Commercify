@@ -5,7 +5,7 @@ services:
     environment:
       - ALLOW_EMPTY_PASSWORD=no
       - MYSQL_DATABASE=db
-      - MYSQL_ROOT_PASSWORD=password123
+      - MYSQL_ROOT_PASSWORD=${DATABASE_PASSWORD}
     ports:
       - "3306:3306"
     networks:
@@ -41,7 +41,7 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/orderdb
       - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=password123
+      - SPRING_DATASOURCE_PASSWORD=${DATABASE_PASSWORD}
     depends_on:
       mysql-db:
         condition: service_healthy
@@ -62,7 +62,7 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/paymentdb
       - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=password123
+      - SPRING_DATASOURCE_PASSWORD=${DATABASE_PASSWORD}
     depends_on:
       mysql-db:
         condition: service_healthy
@@ -83,7 +83,7 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/productdb
       - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=password123
+      - SPRING_DATASOURCE_PASSWORD=${DATABASE_PASSWORD}
     depends_on:
       mysql-db:
         condition: service_healthy
@@ -104,7 +104,7 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/userdb
       - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=password123
+      - SPRING_DATASOURCE_PASSWORD=${DATABASE_PASSWORD}
     depends_on:
       mysql-db:
         condition: service_healthy

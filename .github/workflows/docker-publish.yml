@@ -58,30 +58,30 @@ jobs:
 
       - name: Build and push discovery-server image
         run: |
-          docker build -t ghcr.io/${{ github.repository }}/commercify_discoveryserver:latest ./DiscoveryServer
-          docker push ghcr.io/${{ github.repository }}/commercify_discoveryserver:latest
+          docker build -t ghcr.io/gustavhaavik/commercify/discoveryserver:latest ./DiscoveryServer
+          docker push ghcr.io/gustavhaavik/commercify/discoveryserver:latest
 
       - name: Build and push api-gateway image
         run: |
-          docker build -t ghcr.io/${{ github.repository }}/commercify_apigateway:latest ./ApiGateway
-          docker push ghcr.io/${{ github.repository }}/commercify_apigateway:latest
+          docker build -t ghcr.io/gustavhaavik/commercify/apigateway:latest ./ApiGateway
+          docker push ghcr.io/gustavhaavik/commercify/apigateway:latest
 
       - name: Build and push payment-service image
         run: |
-          docker build -t ghcr.io/${{ github.repository }}/commercify_payments:latest ./PaymentsService
-          docker push ghcr.io/${{ github.repository }}/commercify_payments:latest
+          docker build -t ghcr.io/gustavhaavik/commercify/payments:latest ./PaymentsService
+          docker push ghcr.io/gustavhaavik/commercify/payments:latest
 
       - name: Build and push product-service image
         run: |
-          docker build -t ghcr.io/${{ github.repository }}/commercify_products:latest ./ProductsService
-          docker push ghcr.io/${{ github.repository }}/commercify_products:latest
+          docker build -t ghcr.io/gustavhaavik/commercify/products:latest ./ProductsService
+          docker push ghcr.io/gustavhaavik/commercify/products:latest
 
       - name: Build and push order-service image
         run: |
-          docker build -t ghcr.io/${{ github.repository }}/commercify_orders:latest ./OrderService
-          docker push ghcr.io/${{ github.repository }}/commercify_orders:latest
+          docker build -t ghcr.io/gustavhaavik/commercify/orders:latest ./OrderService
+          docker push ghcr.io/gustavhaavik/commercify/orders:latest
 
       - name: Build and push user-service image
         run: |
-          docker build -t ghcr.io/${{ github.repository }}/commercify_users:latest ./UserService
-          docker push ghcr.io/${{ github.repository }}/commercify_users:latest
+          docker build -t ghcr.io/gustavhaavik/commercify/users:latest ./UserService
+          docker push ghcr.io/gustavhaavik/commercify/users:latest

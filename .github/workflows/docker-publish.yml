@@ -30,7 +30,7 @@ jobs:
       # Build the Spring Boot applications using Maven
       - name: Build payment-service JAR
         run: mvn clean package -DskipTests
-        working-directory: PaymentsService
+        working-directory: PaymentService
 
       - name: Build product-service JAR
         run: mvn clean package -DskipTests

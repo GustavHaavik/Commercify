@@ -1,46 +1,30 @@
 package com.gostavdev.commercify.productsservice;
 
 
+import com.gostavdev.commercify.productsservice.dto.CreateProductRequests;
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.math.BigDecimal;
-
-@Entity
+@Entity(name = "products")
+@NoArgsConstructor
+@Data
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
     private String name;
-    @Column(nullable = false)
     private String description;
-    @Column(nullable = false)
-    private BigDecimal price;
-    @Column(nullable = false)
-    private int quantity;
+    private double price;
+    private int stock;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public int getQuantity() {
-        return quantity;
+    protected Product(CreateProductRequests request) {
+        this.name = request.name();
+        this.description = request.description();
+        this.price = request.price();
+        this.stock = request.stock();
     }
 }

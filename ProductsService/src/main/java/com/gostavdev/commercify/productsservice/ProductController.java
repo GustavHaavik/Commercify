@@ -1,12 +1,14 @@
 package com.gostavdev.commercify.productsservice;
 
+import com.gostavdev.commercify.productsservice.dto.CreateProductRequests;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/api/v1/products")
 public class ProductController {
     private final ProductService productService;
 
@@ -25,7 +27,8 @@ public class ProductController {
     }
 
     @PostMapping
-    public Product createProduct(@RequestBody Product product) {
+    public Product createProduct(@RequestBody CreateProductRequests request) {
+        Product product = new Product(request);
         return productService.saveProduct(product);
     }
 

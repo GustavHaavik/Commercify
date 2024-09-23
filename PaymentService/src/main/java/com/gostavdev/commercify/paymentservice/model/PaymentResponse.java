@@ -1,18 +1,14 @@
 package com.gostavdev.commercify.paymentservice.model;
 
-public class PaymentResponse {
-    private PaymentStatus status;
-
-    public PaymentResponse(PaymentStatus status) {
-        this.status = status;
+public record PaymentResponse(Long paymentId, PaymentStatus status, String clientSecret) {
+    public PaymentResponse {
+        if (paymentId == null || status == null || clientSecret == null) {
+            throw new IllegalArgumentException("PaymentResponse fields cannot be null");
+        }
     }
 
-    public PaymentStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(PaymentStatus status) {
-        this.status = status;
+    public static PaymentResponse FailedPayment() {
+        return new PaymentResponse(-1L, PaymentStatus.FAILED, "");
     }
 }
 

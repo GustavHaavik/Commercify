@@ -1,15 +1,15 @@
 package com.gostavdev.commercify.orderservice;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import com.gostavdev.commercify.orderservice.dto.CreateOrderRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
-@RequestMapping("/orders")
+@RequestMapping("/api/v1/orders")
 public class OrderController {
     private final OrderService orderService;
 
@@ -17,15 +17,10 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @GetMapping("/test")
-    public String test() {
-        return "Order Service is up and running!";
-    }
-
     // Endpoint to create a new order
     @PostMapping
-    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
-        Order createdOrder = orderService.createOrder(order);
+    public ResponseEntity<Order> createOrder(@RequestBody CreateOrderRequest orderRequest) {
+        Order createdOrder = orderService.createOrder(orderRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdOrder);
     }
 

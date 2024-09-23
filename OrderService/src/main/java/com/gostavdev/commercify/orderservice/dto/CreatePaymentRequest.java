@@ -1,7 +1,7 @@
-package com.gostavdev.commercify.paymentservice.model;
+package com.gostavdev.commercify.orderservice.dto;
 
-public record PaymentRequest(Long orderId, Double amount, String currency) {
-    public PaymentRequest {
+public record CreatePaymentRequest(Long orderId, Double amount, String currency) {
+    public CreatePaymentRequest {
         if (orderId == null) {
             throw new IllegalArgumentException("orderId cannot be null");
         }

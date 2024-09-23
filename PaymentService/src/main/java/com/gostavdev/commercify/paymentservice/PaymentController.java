@@ -1,10 +1,7 @@
 package com.gostavdev.commercify.paymentservice;
 
 import com.gostavdev.commercify.paymentservice.exceptions.PaymentNotFoundException;
-import com.gostavdev.commercify.paymentservice.model.Payment;
-import com.gostavdev.commercify.paymentservice.model.PaymentRequest;
-import com.gostavdev.commercify.paymentservice.model.PaymentStatus;
-import com.gostavdev.commercify.paymentservice.model.PaymentStatusRequest;
+import com.gostavdev.commercify.paymentservice.model.*;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Event;
 import com.stripe.net.Webhook;
@@ -18,8 +15,9 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@CrossOrigin
 @RestController
-@RequestMapping("/payments")
+@RequestMapping("/api/v1/payments")
 public class PaymentController {
 
     private final PaymentService paymentService;
@@ -70,16 +68,12 @@ public class PaymentController {
 
     // Endpoint to initiate a payment with Stripe
     @PostMapping("/create-payment-intent")
-    public ResponseEntity<Map<String, Object>> createPaymentIntent(@RequestBody PaymentRequest paymentRequest) {
+    public ResponseEntity<PaymentResponse> createPaymentIntent(@RequestBody PaymentRequest paymentRequest) {
         try {
-            Map<String, Object> response = paymentService.processStripePayment(
-                    paymentRequest.getOrderId(),
-                    paymentRequest.getAmount(),
-                    paymentRequest.getCurrency()
-            );
+            PaymentResponse response = paymentService.processStripePayment(paymentRequest);
             return ResponseEntity.ok(response);
         } catch (StripeException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+            return ResponseEntity.badRequest().body(PaymentResponse.FailedPayment());
         }
     }
 

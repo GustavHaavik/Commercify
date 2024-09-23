@@ -4,9 +4,7 @@ package com.gostavdev.commercify.productsservice;
 import com.gostavdev.commercify.productsservice.dto.CreateProductRequests;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity(name = "products")
 @NoArgsConstructor

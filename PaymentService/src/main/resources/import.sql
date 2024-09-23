@@ -1,0 +1,2 @@
+INSERT INTO payments (order_id, payment_method, amount, status) VALUES  (1, 'CREDIT_CARD', 1399.98, 'COMPLETED');
+INSERT INTO payments (order_id, payment_method, amount, status) VALUES  (2, 'PAYPAL', 199.99, 'PENDING');

@@ -1,7 +1,6 @@
 package com.gostavdev.commercify.productsservice;
 
 import com.gostavdev.commercify.productsservice.dto.CreateProductRequests;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +22,7 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public Product getProductById(@PathVariable Long id) {
+        System.out.println("ProductController.getProductById() called with id: " + id);
         return productService.getProductById(id);
     }
 

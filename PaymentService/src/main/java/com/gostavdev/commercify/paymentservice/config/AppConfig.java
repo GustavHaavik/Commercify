@@ -1,4 +1,4 @@
-package com.gostavdev.commercify.paymentservice;
+package com.gostavdev.commercify.paymentservice.config;
 
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;

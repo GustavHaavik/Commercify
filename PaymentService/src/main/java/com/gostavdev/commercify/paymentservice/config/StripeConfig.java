@@ -1,4 +1,4 @@
-package com.gostavdev.commercify.paymentservice;
+package com.gostavdev.commercify.paymentservice.config;
 
 import com.stripe.Stripe;
 import jakarta.annotation.PostConstruct;

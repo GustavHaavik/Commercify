@@ -1,4 +1,4 @@
-package com.gostavdev.commercify.paymentservice;
+package com.gostavdev.commercify.paymentservice.repositories;
 
 import com.gostavdev.commercify.paymentservice.model.Payment;
 import org.springframework.data.jpa.repository.JpaRepository;

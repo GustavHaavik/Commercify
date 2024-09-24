@@ -1,5 +1,6 @@
-package com.gostavdev.commercify.paymentservice;
+package com.gostavdev.commercify.paymentservice.controllers;
 
+import com.gostavdev.commercify.paymentservice.services.PaymentService;
 import com.gostavdev.commercify.paymentservice.exceptions.PaymentNotFoundException;
 import com.gostavdev.commercify.paymentservice.model.*;
 import com.stripe.exception.StripeException;

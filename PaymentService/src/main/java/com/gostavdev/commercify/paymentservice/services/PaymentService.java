@@ -1,4 +1,4 @@
-package com.gostavdev.commercify.paymentservice;
+package com.gostavdev.commercify.paymentservice.services;
 
 import com.gostavdev.commercify.paymentservice.exceptions.InvalidEventDataException;
 import com.gostavdev.commercify.paymentservice.exceptions.PaymentNotFoundException;
@@ -6,6 +6,7 @@ import com.gostavdev.commercify.paymentservice.model.Payment;
 import com.gostavdev.commercify.paymentservice.model.PaymentRequest;
 import com.gostavdev.commercify.paymentservice.model.PaymentResponse;
 import com.gostavdev.commercify.paymentservice.model.PaymentStatus;
+import com.gostavdev.commercify.paymentservice.repositories.PaymentRepository;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Event;
 import com.stripe.model.PaymentIntent;
@@ -13,9 +14,6 @@ import com.stripe.model.StripeObject;
 import com.stripe.param.PaymentIntentCreateParams;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -43,10 +41,7 @@ public class PaymentService {
         PaymentIntent paymentIntent = PaymentIntent.create(params);
 
         // Save the payment in our local database with status "PENDING"
-        Payment payment = new Payment(paymentRequest);
-        payment.setPaymentMethod("Stripe");
-        payment.setStatus(PaymentStatus.PENDING);
-        payment.setPaymentDate(LocalDateTime.now());
+        Payment payment = new Payment(paymentRequest, "STRIPE");
         paymentRepository.save(payment);
 
         // Return the payment intent's client secret for client-side confirmation
@@ -56,7 +51,7 @@ public class PaymentService {
     // Update payment status after confirmation (if needed)
     public void updatePaymentStatus(Long orderId, PaymentStatus status) throws PaymentNotFoundException {
         Payment payment = paymentRepository.findByOrderId(orderId).orElseThrow(() -> new PaymentNotFoundException("Payment not found"));
-        payment.setStatus(status);
+        payment.updateStatus(status);
         paymentRepository.save(payment);
     }
 

@@ -1,15 +1,15 @@
 package com.gostavdev.commercify.orderservice.dto;
 
-public record CreateOrderRequest(Long productId, Long userId, Integer quantity) {
+import com.gostavdev.commercify.orderservice.model.OrderLine;
+
+import java.util.List;
+
+public record CreateOrderRequest(Long userId, List<OrderLine> orderLines) {
     public CreateOrderRequest {
-        if (productId == null) {
-            throw new IllegalArgumentException("productId cannot be null");
-        }
-        if (userId == null) {
+        if (userId == null)
             throw new IllegalArgumentException("userId cannot be null");
-        }
-        if (quantity == null) {
-            throw new IllegalArgumentException("quantity cannot be null");
-        }
+
+        if (orderLines == null || orderLines.isEmpty())
+            throw new IllegalArgumentException("orderLines cannot be null or empty");
     }
 }

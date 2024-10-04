@@ -1,6 +1,5 @@
 package com.gostavdev.commercify.orderservice.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gostavdev.commercify.orderservice.dto.ProductDto;
 import jakarta.persistence.*;
 import lombok.Data;

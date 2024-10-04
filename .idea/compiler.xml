@@ -8,15 +8,15 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="ProductsService" />
-        <module name="DiscoveryServer" />
         <module name="OrderService" />
         <module name="UserService" />
-        <module name="ApiGateway" />
         <module name="PaymentService" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="ApiGateway" target="17" />
       <module name="discovery" target="17" />
+      <module name="DiscoveryServer" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

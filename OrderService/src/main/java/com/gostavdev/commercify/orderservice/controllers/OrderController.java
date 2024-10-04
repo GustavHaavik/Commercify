@@ -1,9 +1,10 @@
 package com.gostavdev.commercify.orderservice.controllers;
 
-import com.gostavdev.commercify.orderservice.dto.CreateOrderRequest;
-import com.gostavdev.commercify.orderservice.model.Order;
+import com.gostavdev.commercify.orderservice.dto.OrderDTO;
+import com.gostavdev.commercify.orderservice.dto.api.CreateOrderRequest;
 import com.gostavdev.commercify.orderservice.model.OrderStatus;
 import com.gostavdev.commercify.orderservice.services.OrderService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,40 +14,33 @@ import java.util.List;
 @CrossOrigin
 @RestController
 @RequestMapping("/api/v1/orders")
+@AllArgsConstructor
 public class OrderController {
     private final OrderService orderService;
 
-    public OrderController(OrderService orderService) {
-        this.orderService = orderService;
-    }
-
-    // Endpoint to create a new order
     @PostMapping
-    public ResponseEntity<Order> createOrder(@RequestBody CreateOrderRequest orderRequest) {
-        Order createdOrder = orderService.createOrder(orderRequest.userId(), orderRequest.orderLines());
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdOrder);
+    public ResponseEntity<OrderDTO> createOrder(@RequestBody CreateOrderRequest orderRequest) {
+        OrderDTO order = orderService.createOrder(orderRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(order);
     }
 
-    // Endpoint to fetch orders by user ID
+    @GetMapping
+    public ResponseEntity<List<OrderDTO>> getAllOrders() {
+        List<OrderDTO> orders = orderService.getAllOrders();
+        return new ResponseEntity<>(orders, HttpStatus.OK);
+    }
+
     @GetMapping("/user/{userId}")
-    public List<Order> getOrdersByUserId(@PathVariable Long userId) {
-        System.out.println("Fetching orders for user ID: " + userId);
-        return orderService.getOrdersByUserId(userId);
+    public ResponseEntity<List<OrderDTO>> getOrdersByUserId(@PathVariable Long userId) {
+        List<OrderDTO> orders = orderService.getOrdersByUserId(userId);
+        return ResponseEntity.ok(orders);
     }
 
-    // Endpoint to fetch an order by ID
-    @GetMapping("/{id}")
-    public ResponseEntity<Order> getOrderById(@PathVariable Long id) {
-        Order order;
-        try {
-            order = orderService.getOrderById(id);
-        } catch (RuntimeException e) {
-            return ResponseEntity.internalServerError().body(new Order());
-        }
-        return ResponseEntity.ok(order);
+    @GetMapping("/{orderId}")
+    public ResponseEntity<OrderDTO> getOrderById(@PathVariable Long orderId) {
+        return ResponseEntity.ok(orderService.getOrderById(orderId));
     }
 
-    // Endpoint to update order status
     @PutMapping("/{id}/status")
     public ResponseEntity<Void> updateOrderStatus(@PathVariable Long id, @RequestBody String status) {
         OrderStatus orderStatus;

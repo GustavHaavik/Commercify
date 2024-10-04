@@ -7,8 +7,6 @@
     <packaging>pom</packaging>
     <version>1.0.0</version>
     <modules>
-        <module>ApiGateway</module>
-        <module>DiscoveryServer</module>
         <module>OrderService</module>
         <module>PaymentService</module>
         <module>ProductsService</module>

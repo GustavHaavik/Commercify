@@ -1,6 +1,7 @@
 package com.gostavdev.commercify.productsservice;
 
-import com.gostavdev.commercify.productsservice.dto.CreateProductRequests;
+import com.gostavdev.commercify.productsservice.dto.CreateProductsRequest;
+import com.gostavdev.commercify.productsservice.dto.ProductDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody CreateProductRequests request) {
+    public ResponseEntity<Product> createProduct(@RequestBody ProductDTO request) {
         Product product = new Product(request);
         return ResponseEntity.ok(productService.saveProduct(product));
     }

@@ -1,7 +1,7 @@
 package com.gostavdev.commercify.productsservice;
 
 
-import com.gostavdev.commercify.productsservice.dto.CreateProductRequests;
+import com.gostavdev.commercify.productsservice.dto.ProductDTO;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,7 +19,7 @@ public class Product {
     private Double unitPrice;
     private Integer stock;
 
-    protected Product(CreateProductRequests request) {
+    protected Product(ProductDTO request) {
         this.name = request.name();
         this.description = request.description();
         this.unitPrice = request.unitPrice();

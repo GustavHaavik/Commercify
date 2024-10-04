@@ -24,7 +24,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: gkhaavik
+          username: ${{ github.actor }}
           password: ${{ secrets.GHCR_PAT2 }}
 
       # Build the Spring Boot applications using Maven
@@ -50,20 +50,20 @@ jobs:
 
       - name: Build and push payment-service image
         run: |
-          docker build -t ghcr.io/gustavhaavik/commercify_payments:latest ./PaymentService
-          docker push ghcr.io/gustavhaavik/commercify_payments:latest
+          docker build -t ghcr.io/${{ github.actor }}/commercify_payments:latest ./PaymentService
+          docker push ghcr.io/${{ github.actor }}/commercify_payments:latest
 
       - name: Build and push product-service image
         run: |
-          docker build -t ghcr.io/gustavhaavik/commercify_products:latest ./ProductsService
-          docker push ghcr.io/gustavhaavik/commercify_products:latest
+          docker build -t ghcr.io/${{ github.actor }}/commercify_products:latest ./ProductsService
+          docker push ghcr.io/${{ github.actor }}/commercify_products:latest
 
       - name: Build and push order-service image
         run: |
-          docker build -t ghcr.io/gustavhaavik/commercify_orders:latest ./OrderService
-          docker push ghcr.io/gustavhaavik/commercify_orders:latest
+          docker build -t ghcr.io/${{ github.actor }}/commercify_orders:latest ./OrderService
+          docker push ghcr.io/${{ github.actor }}/commercify_orders:latest
 
       - name: Build and push user-service image
         run: |
-          docker build -t ghcr.io/gustavhaavik/commercify_users:latest ./UserService
-          docker push ghcr.io/gustavhaavik/commercify_users:latest
+          docker build -t ghcr.io/${{ github.actor }}/commercify_users:latest ./UserService
+          docker push ghcr.io/${{ github.actor }}/commercify_users:latest

@@ -1,35 +1,37 @@
 package com.gostavdev.commercify.productsservice;
 
 import com.gostavdev.commercify.productsservice.dto.CreateProductRequests;
+import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin
 @RestController
 @RequestMapping("/api/v1/products")
+@AllArgsConstructor
 public class ProductController {
     private final ProductService productService;
 
-    public ProductController(ProductService productService) {
-        this.productService = productService;
-    }
-
     @GetMapping
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    public ResponseEntity<List<Product>> getAllProducts() {
+        return ResponseEntity.ok(productService.getAllProducts());
     }
 
     @GetMapping("/{id}")
-    public Product getProductById(@PathVariable Long id) {
-        System.out.println("ProductController.getProductById() called with id: " + id);
-        return productService.getProductById(id);
+    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+        Product product = productService.getProductById(id);
+        if (product == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(product);
     }
 
     @PostMapping
-    public Product createProduct(@RequestBody CreateProductRequests request) {
+    public ResponseEntity<Product> createProduct(@RequestBody CreateProductRequests request) {
         Product product = new Product(request);
-        return productService.saveProduct(product);
+        return ResponseEntity.ok(productService.saveProduct(product));
     }
 
     @DeleteMapping("/{id}")

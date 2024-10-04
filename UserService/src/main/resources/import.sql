@@ -1,2 +1,2 @@
-INSERT INTO users (username, password, email, roles, enabled) VALUES ('admin', 'admin123', 'admin@example.com', 'ROLE_ADMIN', TRUE);
-INSERT INTO users (username, password, email, roles, enabled) VALUES ('user', 'user123', 'user@example.com', 'ROLE_USER', TRUE);
+INSERT INTO users (first_name, last_name, email, password, created_at, updated_at) VALUES ('John', 'Doe', 'johndoe@example.com', 'password123', NOW(), NOW());
+INSERT INTO users (first_name, last_name, email, password, created_at, updated_at) VALUES ('Jane', 'Doe', 'janedoe@example.com', 'password123', NOW(), null);

@@ -1,0 +1,28 @@
+services:
+  mysql-db:
+    image: docker.io/bitnami/mysql:8.4
+    container_name: mysql-db
+    environment:
+      - ALLOW_EMPTY_PASSWORD=no
+      - MYSQL_DATABASE=db
+      - MYSQL_ROOT_PASSWORD=${DATABASE_PASSWORD}
+    ports:
+      - "3306:3306"
+    networks:
+      - spring-net
+    volumes:
+      - mysql-data:/bitnami/mysql/data
+      - ./mysql-init-scripts:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: [ 'CMD', '/opt/bitnami/scripts/mysql/healthcheck.sh' ]
+      interval: 15s
+      timeout: 5s
+      retries: 6
+
+networks:
+  spring-net:
+    driver: bridge
+
+volumes:
+  mysql-data:
+    driver: local

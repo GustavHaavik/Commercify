@@ -1,6 +1,7 @@
-package com.gostavdev.commercify.userservice;
+package com.gostavdev.commercify.userservice.service;
 
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import com.gostavdev.commercify.userservice.UserRepository;
+import com.gostavdev.commercify.userservice.entities.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,16 +23,6 @@ public class UserService {
 
     public User createUser(User user) {
         return userRepository.save(user);
-    }
-
-    public User loadUserByUsername(String username) {
-        return userRepository.findUserByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    }
-
-    public User getUserByUsername(String username) {
-        return userRepository.findUserByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException(username));
     }
 
     public User getUserById(Long id) {

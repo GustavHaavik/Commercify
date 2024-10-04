@@ -1,17 +1,15 @@
 package com.gostavdev.commercify.productsservice;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
+@AllArgsConstructor
 public class ProductService {
     private final ProductRepository productRepository;
-
-    public ProductService(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
@@ -22,7 +20,6 @@ public class ProductService {
     }
 
     public Product saveProduct(Product product) {
-        System.out.println(product);
         return productRepository.save(product);
     }
 

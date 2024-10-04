@@ -1,6 +1,6 @@
 package com.gostavdev.commercify.productsservice.dto;
 
-public record CreateProductRequests(
+public record ProductDTO(
         String name,
         String description,
         Double unitPrice,

@@ -5,6 +5,7 @@
 Commercify is a backend service for a e-commerce platform. It provides APIs for user authentication, product management,
 order management, and payment gateway integration. The application is built using Java and Spring Boot. The application
 is designed to be modular and scalable, and can be deployed on any cloud platform.
+
 ---
 
 ## Frontend

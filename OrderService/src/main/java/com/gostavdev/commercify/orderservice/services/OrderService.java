@@ -11,6 +11,7 @@ import com.gostavdev.commercify.orderservice.feignclients.UserClient;
 import com.gostavdev.commercify.orderservice.model.Order;
 import com.gostavdev.commercify.orderservice.model.OrderLine;
 import com.gostavdev.commercify.orderservice.model.OrderStatus;
+import com.gostavdev.commercify.orderservice.repositories.OrderLineRepository;
 import com.gostavdev.commercify.orderservice.repositories.OrderRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class OrderService {
     private final OrderRepository orderRepository;
+    private final OrderLineRepository orderLineRepository;
     private final OrderDTOMapper mapper;
     private final ProductsClient productsClient;
     private final UserClient userClient;
@@ -41,6 +43,8 @@ public class OrderService {
 //            throw new RuntimeException("User not found with ID: " + request.userId());
 //        }
 
+        Order order = new Order(request.userId());
+
         // Fetch product details and build order lines
         List<OrderLine> orderLines = request.orderLines().stream().map(orderLineRequest -> {
             ProductDto product = productsClient.getProductById(orderLineRequest.productId());
@@ -57,15 +61,16 @@ public class OrderService {
             orderLine.setProduct(product);
             orderLine.setQuantity(orderLineRequest.quantity());
             orderLine.setUnitPrice(product.unitPrice());
+            orderLine.setOrder(order);
 
             return orderLine;
         }).collect(Collectors.toList());
 
         // Create and save Order entity
-        Order order = new Order(request.userId());
         order.setOrderLines(orderLines);
 
         orderRepository.save(order);
+        orderLineRepository.saveAll(orderLines);
 
         return mapper.apply(order);
     }

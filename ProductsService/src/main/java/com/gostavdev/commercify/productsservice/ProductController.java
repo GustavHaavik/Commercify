@@ -1,6 +1,5 @@
 package com.gostavdev.commercify.productsservice;
 
-import com.gostavdev.commercify.productsservice.dto.CreateProductsRequest;
 import com.gostavdev.commercify.productsservice.dto.ProductDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;

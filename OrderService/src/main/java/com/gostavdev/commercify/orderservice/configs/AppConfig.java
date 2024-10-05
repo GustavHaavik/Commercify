@@ -1,4 +1,4 @@
-package com.gostavdev.commercify.orderservice;
+package com.gostavdev.commercify.orderservice.configs;
 
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;

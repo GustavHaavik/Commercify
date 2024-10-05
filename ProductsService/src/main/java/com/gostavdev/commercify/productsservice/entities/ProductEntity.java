@@ -1,7 +1,7 @@
 package com.gostavdev.commercify.productsservice.entities;
 
 
-import com.gostavdev.commercify.productsservice.dto.ProductDTO;
+import com.gostavdev.commercify.productsservice.requests.ProductRequest;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,7 +32,7 @@ public class ProductEntity {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    public ProductEntity(ProductDTO request) {
+    public ProductEntity(ProductRequest request) {
         this.name = request.name();
         this.description = request.description();
         this.unitPrice = request.unitPrice();

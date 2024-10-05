@@ -1,5 +1,7 @@
 package com.gostavdev.commercify.productsservice.controllers;
 
+import com.gostavdev.commercify.productsservice.requests.CreateProductsRequest;
+import com.gostavdev.commercify.productsservice.requests.ProductRequest;
 import com.gostavdev.commercify.productsservice.services.ProductService;
 import com.gostavdev.commercify.productsservice.dto.ProductDTO;
 import com.stripe.exception.StripeException;
@@ -20,6 +22,16 @@ public class ProductController {
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
+    @PostMapping
+    public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductRequest request) {
+        try {
+            ProductDTO product = productService.saveProduct(request);
+            return ResponseEntity.ok(product);
+        } catch (StripeException e) {
+            return ResponseEntity.status(500).build();
+        }
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
         ProductDTO product = productService.getProductById(id);
@@ -30,11 +42,12 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
-    @PostMapping
-    public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO request) {
+    @PostMapping("/batch")
+    public ResponseEntity<List<ProductDTO>> createBatchProducts(@RequestBody List<ProductRequest> request) {
+        System.out.println("Products: " + request);
         try {
-            ProductDTO product = productService.saveProduct(request);
-            return ResponseEntity.ok(product);
+            List<ProductDTO> products = productService.saveProducts(request);
+            return ResponseEntity.ok(products);
         } catch (StripeException e) {
             return ResponseEntity.status(500).build();
         }

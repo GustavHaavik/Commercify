@@ -4,6 +4,7 @@ import com.gostavdev.commercify.productsservice.dto.ProductDTO;
 import com.gostavdev.commercify.productsservice.dto.ProductDTOMapper;
 import com.gostavdev.commercify.productsservice.entities.ProductEntity;
 import com.gostavdev.commercify.productsservice.repositories.ProductRepository;
+import com.gostavdev.commercify.productsservice.requests.ProductRequest;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Product;
 import com.stripe.param.ProductCreateParams;
@@ -27,7 +28,7 @@ public class ProductService {
         return productRepository.findById(id).map(mapper).orElseThrow(() -> new NoSuchElementException("Product not found"));
     }
 
-    public ProductDTO saveProduct(ProductDTO product) throws StripeException {
+    public ProductDTO saveProduct(ProductRequest product) throws StripeException {
         long amountInCents = (long) (product.unitPrice() * 100);
         ProductEntity productEntity = new ProductEntity(product);
         ProductEntity savedProduct = productRepository.save(productEntity);
@@ -50,5 +51,15 @@ public class ProductService {
 
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
+    }
+
+    public List<ProductDTO> saveProducts(List<ProductRequest> request) throws StripeException {
+        return request.stream().map(p -> {
+            try {
+                return saveProduct(p);
+            } catch (StripeException e) {
+                throw new RuntimeException(e);
+            }
+        }).toList();
     }
 }

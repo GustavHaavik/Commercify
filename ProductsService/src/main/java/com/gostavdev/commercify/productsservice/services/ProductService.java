@@ -41,7 +41,7 @@ public class ProductService {
                 ProductCreateParams.builder()
                         .setName(product.name())
                         .setDescription(product.description())
-                        .setId(productEntity.getId().toString())
+                        .setId(productEntity.getProductId().toString())
                         .setDefaultPriceData(defaultPriceData)
                         .build();
         Product.create(params);

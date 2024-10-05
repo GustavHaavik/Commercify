@@ -1,6 +1,5 @@
 package com.gostavdev.commercify.productsservice.controllers;
 
-import com.gostavdev.commercify.productsservice.requests.CreateProductsRequest;
 import com.gostavdev.commercify.productsservice.requests.ProductRequest;
 import com.gostavdev.commercify.productsservice.services.ProductService;
 import com.gostavdev.commercify.productsservice.dto.ProductDTO;

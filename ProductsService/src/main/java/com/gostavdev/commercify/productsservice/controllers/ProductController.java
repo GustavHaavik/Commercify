@@ -1,6 +1,8 @@
-package com.gostavdev.commercify.productsservice;
+package com.gostavdev.commercify.productsservice.controllers;
 
+import com.gostavdev.commercify.productsservice.services.ProductService;
 import com.gostavdev.commercify.productsservice.dto.ProductDTO;
+import com.gostavdev.commercify.productsservice.entities.Product;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,8 +32,7 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Product> createProduct(@RequestBody ProductDTO request) {
-        Product product = new Product(request);
-        return ResponseEntity.ok(productService.saveProduct(product));
+        return ResponseEntity.ok(productService.saveProduct(request));
     }
 
     @DeleteMapping("/{id}")

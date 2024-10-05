@@ -1,4 +1,6 @@
-package com.gostavdev.commercify.paymentservice.model;
+package com.gostavdev.commercify.paymentservice.dto;
+
+import com.gostavdev.commercify.paymentservice.entities.PaymentStatus;
 
 public class PaymentStatusRequest {
     private PaymentStatus status;

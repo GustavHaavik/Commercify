@@ -1,6 +1,6 @@
 package com.gostavdev.commercify.productsservice.dto;
 
-import com.gostavdev.commercify.productsservice.Product;
+import com.gostavdev.commercify.productsservice.entities.Product;
 import org.springframework.stereotype.Service;
 
 import java.util.function.Function;

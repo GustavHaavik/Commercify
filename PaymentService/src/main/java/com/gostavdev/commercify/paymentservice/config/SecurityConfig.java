@@ -1,4 +1,4 @@
-package com.gostavdev.commercify.productsservice;
+package com.gostavdev.commercify.paymentservice.config;
 
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;

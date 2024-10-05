@@ -1,2 +1,0 @@
-INSERT INTO payments (order_id, amount, payment_method, status, created_at, updated_at) VALUES (1, 1399.98, 'CREDIT_CARD', 'PAID', '2021-05-01 10:00:00', '2021-05-01 10:00:00');
-INSERT INTO payments (order_id, amount, payment_method, status, created_at, updated_at) VALUES (2, 199.99, 'PAYPAL', 'PENDING', '2021-05-01 10:00:00', '2021-05-01 10:00:00');

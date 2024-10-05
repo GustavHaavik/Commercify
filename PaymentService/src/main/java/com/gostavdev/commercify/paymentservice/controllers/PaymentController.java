@@ -1,8 +1,11 @@
 package com.gostavdev.commercify.paymentservice.controllers;
 
+import com.gostavdev.commercify.paymentservice.dto.PaymentRequest;
+import com.gostavdev.commercify.paymentservice.dto.PaymentResponse;
+import com.gostavdev.commercify.paymentservice.dto.PaymentStatusRequest;
 import com.gostavdev.commercify.paymentservice.services.PaymentService;
 import com.gostavdev.commercify.paymentservice.exceptions.PaymentNotFoundException;
-import com.gostavdev.commercify.paymentservice.model.*;
+import com.gostavdev.commercify.paymentservice.entities.*;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Event;
 import com.stripe.net.Webhook;
@@ -70,48 +73,13 @@ public class PaymentController {
     // Endpoint to initiate a payment with Stripe
     @PostMapping("/create-payment-intent")
     public ResponseEntity<PaymentResponse> createPaymentIntent(@RequestBody PaymentRequest paymentRequest) {
-        try {
-            PaymentResponse response = paymentService.processStripePayment(paymentRequest);
-            return ResponseEntity.ok(response);
-        } catch (StripeException e) {
-            return ResponseEntity.badRequest().body(PaymentResponse.FailedPayment());
-        }
+        PaymentResponse response = paymentService.processStripePayment(paymentRequest);
+        return ResponseEntity.ok(response);
     }
 
-    // Endpoint to update payment status (if needed)
-    @PostMapping("/{orderId}/update-status")
-    public ResponseEntity<Void> updatePaymentStatus(@PathVariable Long orderId, @RequestBody PaymentStatusRequest request) {
-        try {
-            paymentService.updatePaymentStatus(orderId, request.getStatus());
-        } catch (PaymentNotFoundException e) {
-            ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-            throw new RuntimeException(e);
-        }
-        return ResponseEntity.ok().build();
-    }
-
-    // Endpoint to get the status of a payment
     @GetMapping("/{orderId}/status")
     public ResponseEntity<String> getPaymentStatus(@PathVariable Long orderId) {
         PaymentStatus status = paymentService.getPaymentStatus(orderId);
         return ResponseEntity.ok(status.name());
-    }
-
-    // Endpoint to refund a payment
-    @PostMapping("/{orderId}/refund")
-    public ResponseEntity<Payment> refundPayment(@PathVariable Long orderId) {
-        Payment payment;
-        try {
-            payment = paymentService.refundPayment(orderId);
-        } catch (PaymentNotFoundException e) {
-            ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-            throw new RuntimeException(e);
-        }
-        return ResponseEntity.ok(payment);
-    }
-
-    @GetMapping("/test")
-    public ResponseEntity<String> test() {
-        return ResponseEntity.ok("Payment service is up and running!");
     }
 }

@@ -1,4 +1,4 @@
-package com.gostavdev.commercify.productsservice;
+package com.gostavdev.commercify.productsservice.entities;
 
 
 import com.gostavdev.commercify.productsservice.dto.ProductDTO;
@@ -19,7 +19,7 @@ public class Product {
     private Double unitPrice;
     private Integer stock;
 
-    protected Product(ProductDTO request) {
+    public Product(ProductDTO request) {
         this.name = request.name();
         this.description = request.description();
         this.unitPrice = request.unitPrice();

@@ -1,4 +1,4 @@
-package com.gostavdev.commercify.paymentservice.model;
+package com.gostavdev.commercify.paymentservice.dto;
 
 public class OrderStatusUpdate {
     private String status;

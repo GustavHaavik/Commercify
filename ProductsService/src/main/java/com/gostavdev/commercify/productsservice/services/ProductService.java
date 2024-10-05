@@ -1,5 +1,8 @@
-package com.gostavdev.commercify.productsservice;
+package com.gostavdev.commercify.productsservice.services;
 
+import com.gostavdev.commercify.productsservice.dto.ProductDTO;
+import com.gostavdev.commercify.productsservice.entities.Product;
+import com.gostavdev.commercify.productsservice.repositories.ProductRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +22,10 @@ public class ProductService {
         return productRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Product not found"));
     }
 
-    public Product saveProduct(Product product) {
-        return productRepository.save(product);
+    public Product saveProduct(ProductDTO product) {
+        Product productEntity = new Product(product);
+
+        return productRepository.save(productEntity);
     }
 
     public void deleteProduct(Long id) {

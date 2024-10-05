@@ -1,4 +1,4 @@
-package com.gostavdev.commercify.paymentservice.model;
+package com.gostavdev.commercify.paymentservice.entities;
 
 public enum PaymentStatus {
     PENDING,

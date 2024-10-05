@@ -1,8 +1,12 @@
 package com.gostavdev.commercify.productsservice.services;
 
 import com.gostavdev.commercify.productsservice.dto.ProductDTO;
-import com.gostavdev.commercify.productsservice.entities.Product;
+import com.gostavdev.commercify.productsservice.dto.ProductDTOMapper;
+import com.gostavdev.commercify.productsservice.entities.ProductEntity;
 import com.gostavdev.commercify.productsservice.repositories.ProductRepository;
+import com.stripe.exception.StripeException;
+import com.stripe.model.Product;
+import com.stripe.param.ProductCreateParams;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,19 +17,35 @@ import java.util.NoSuchElementException;
 @AllArgsConstructor
 public class ProductService {
     private final ProductRepository productRepository;
+    private final ProductDTOMapper mapper;
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductDTO> getAllProducts() {
+        return productRepository.findAll().stream().map(mapper).toList();
     }
 
-    public Product getProductById(Long id) {
-        return productRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Product not found"));
+    public ProductDTO getProductById(Long id) {
+        return productRepository.findById(id).map(mapper).orElseThrow(() -> new NoSuchElementException("Product not found"));
     }
 
-    public Product saveProduct(ProductDTO product) {
-        Product productEntity = new Product(product);
+    public ProductDTO saveProduct(ProductDTO product) throws StripeException {
+        long amountInCents = (long) (product.unitPrice() * 100);
+        ProductEntity productEntity = new ProductEntity(product);
+        ProductEntity savedProduct = productRepository.save(productEntity);
 
-        return productRepository.save(productEntity);
+        ProductCreateParams.DefaultPriceData defaultPriceData = ProductCreateParams.DefaultPriceData.builder()
+                .setCurrency(product.currency())
+                .setUnitAmount(amountInCents).build();
+
+        ProductCreateParams params =
+                ProductCreateParams.builder()
+                        .setName(product.name())
+                        .setDescription(product.description())
+                        .setId(productEntity.getId().toString())
+                        .setDefaultPriceData(defaultPriceData)
+                        .build();
+        Product.create(params);
+
+        return mapper.apply(savedProduct);
     }
 
     public void deleteProduct(Long id) {

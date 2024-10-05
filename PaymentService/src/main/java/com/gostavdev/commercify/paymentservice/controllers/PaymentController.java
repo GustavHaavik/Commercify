@@ -2,11 +2,8 @@ package com.gostavdev.commercify.paymentservice.controllers;
 
 import com.gostavdev.commercify.paymentservice.dto.PaymentRequest;
 import com.gostavdev.commercify.paymentservice.dto.PaymentResponse;
-import com.gostavdev.commercify.paymentservice.dto.PaymentStatusRequest;
 import com.gostavdev.commercify.paymentservice.services.PaymentService;
-import com.gostavdev.commercify.paymentservice.exceptions.PaymentNotFoundException;
 import com.gostavdev.commercify.paymentservice.entities.*;
-import com.stripe.exception.StripeException;
 import com.stripe.model.Event;
 import com.stripe.net.Webhook;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @CrossOrigin

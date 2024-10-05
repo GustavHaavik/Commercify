@@ -2,7 +2,7 @@ package com.gostavdev.commercify.productsservice.controllers;
 
 import com.gostavdev.commercify.productsservice.services.ProductService;
 import com.gostavdev.commercify.productsservice.dto.ProductDTO;
-import com.gostavdev.commercify.productsservice.entities.Product;
+import com.stripe.exception.StripeException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,13 +16,13 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
+    public ResponseEntity<List<ProductDTO>> getAllProducts() {
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
-        Product product = productService.getProductById(id);
+    public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
+        ProductDTO product = productService.getProductById(id);
         if (product == null) {
             return ResponseEntity.notFound().build();
         }
@@ -31,8 +31,13 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody ProductDTO request) {
-        return ResponseEntity.ok(productService.saveProduct(request));
+    public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO request) {
+        try {
+            ProductDTO product = productService.saveProduct(request);
+            return ResponseEntity.ok(product);
+        } catch (StripeException e) {
+            return ResponseEntity.status(500).build();
+        }
     }
 
     @DeleteMapping("/{id}")

@@ -1,8 +1,9 @@
 package com.gostavdev.commercify.productsservice.entities;
 
-
 import com.gostavdev.commercify.productsservice.requests.ProductRequest;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -11,8 +12,10 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity(name = "products")
-@NoArgsConstructor
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProductEntity {
 
     @Id
@@ -23,6 +26,7 @@ public class ProductEntity {
     private String currency;
     private Double unitPrice;
     private Integer stock;
+    private String stripeId;
 
     @CreationTimestamp
     @Column(name = "created_at")
@@ -31,12 +35,4 @@ public class ProductEntity {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    public ProductEntity(ProductRequest request) {
-        this.name = request.name();
-        this.description = request.description();
-        this.unitPrice = request.unitPrice();
-        this.stock = request.stock();
-        this.currency = request.currency();
-    }
 }

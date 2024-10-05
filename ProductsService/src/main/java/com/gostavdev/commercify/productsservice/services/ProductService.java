@@ -28,23 +28,37 @@ public class ProductService {
         return productRepository.findById(id).map(mapper).orElseThrow(() -> new NoSuchElementException("Product not found"));
     }
 
-    public ProductDTO saveProduct(ProductRequest product) throws StripeException {
-        long amountInCents = (long) (product.unitPrice() * 100);
-        ProductEntity productEntity = new ProductEntity(product);
+    public ProductDTO saveProduct(ProductRequest request) {
+        ProductEntity productEntity = ProductEntity.builder()
+                .name(request.name())
+                .description(request.description())
+                .currency(request.currency())
+                .unitPrice(request.unitPrice())
+                .stock(request.stock())
+                .build();
+
+        try {
+            long amountInCents = (long) (productEntity.getUnitPrice() * 100);
+
+            ProductCreateParams.DefaultPriceData defaultPriceData = ProductCreateParams.DefaultPriceData.builder()
+                    .setCurrency(productEntity.getCurrency())
+                    .setUnitAmount(amountInCents).build();
+
+            ProductCreateParams params =
+                    ProductCreateParams.builder()
+                            .setName(productEntity.getName())
+                            .setDescription(productEntity.getDescription())
+                            .setDefaultPriceData(defaultPriceData)
+                            .build();
+            Product stripeProduct = Product.create(params);
+
+            productEntity.setStripeId(stripeProduct.getId());
+
+        } catch (StripeException e) {
+            throw new RuntimeException("Stripe error", e);
+        }
+
         ProductEntity savedProduct = productRepository.save(productEntity);
-
-        ProductCreateParams.DefaultPriceData defaultPriceData = ProductCreateParams.DefaultPriceData.builder()
-                .setCurrency(product.currency())
-                .setUnitAmount(amountInCents).build();
-
-        ProductCreateParams params =
-                ProductCreateParams.builder()
-                        .setName(product.name())
-                        .setDescription(product.description())
-                        .setId(productEntity.getProductId().toString())
-                        .setDefaultPriceData(defaultPriceData)
-                        .build();
-        Product.create(params);
 
         return mapper.apply(savedProduct);
     }
@@ -53,13 +67,7 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public List<ProductDTO> saveProducts(List<ProductRequest> request) throws StripeException {
-        return request.stream().map(p -> {
-            try {
-                return saveProduct(p);
-            } catch (StripeException e) {
-                throw new RuntimeException(e);
-            }
-        }).toList();
+    public List<ProductDTO> saveProducts(List<ProductRequest> request) {
+        return request.stream().map(this::saveProduct).toList();
     }
 }

@@ -12,14 +12,14 @@ import java.time.LocalDateTime;
 @Entity(name = "payments")
 @NoArgsConstructor
 @Data
-public class Payment {
+public class PaymentEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long paymentId;
 
     @Column(name = "order_id", nullable = false)
     private Long orderId;
-    private Double amount;
+    private Double totalAmount;
     @Column(name = "payment_method")
     private String paymentMethod; // e.g., Credit Card, PayPal
     private String paymentProvider;
@@ -35,9 +35,9 @@ public class Payment {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    public Payment(PaymentRequest paymentRequest) {
+    public PaymentEntity(PaymentRequest paymentRequest) {
         this.orderId = paymentRequest.orderId();
-        this.amount = paymentRequest.amount();
+        this.totalAmount = paymentRequest.totalAmount();
         this.paymentProvider = paymentRequest.paymentProvider();
         this.status = PaymentStatus.PENDING;
     }

@@ -66,10 +66,15 @@ public class PaymentController {
         return ResponseEntity.ok("Event processed");
     }
 
-    // Endpoint to initiate a payment with Stripe
     @PostMapping("/create-payment-intent")
     public ResponseEntity<PaymentResponse> createPaymentIntent(@RequestBody PaymentRequest paymentRequest) {
         PaymentResponse response = paymentService.processStripePayment(paymentRequest);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/create-checkout-session")
+    public ResponseEntity<PaymentResponse> createCheckoutSession(@RequestBody PaymentRequest paymentRequest) {
+        PaymentResponse response = paymentService.stripeCheckoutSession(paymentRequest);
         return ResponseEntity.ok(response);
     }
 

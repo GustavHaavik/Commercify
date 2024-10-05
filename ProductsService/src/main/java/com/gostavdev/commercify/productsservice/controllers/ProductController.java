@@ -23,12 +23,8 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductRequest request) {
-        try {
-            ProductDTO product = productService.saveProduct(request);
-            return ResponseEntity.ok(product);
-        } catch (StripeException e) {
-            return ResponseEntity.status(500).build();
-        }
+        ProductDTO product = productService.saveProduct(request);
+        return ResponseEntity.ok(product);
     }
 
     @GetMapping("/{id}")
@@ -43,13 +39,8 @@ public class ProductController {
 
     @PostMapping("/batch")
     public ResponseEntity<List<ProductDTO>> createBatchProducts(@RequestBody List<ProductRequest> request) {
-        System.out.println("Products: " + request);
-        try {
-            List<ProductDTO> products = productService.saveProducts(request);
-            return ResponseEntity.ok(products);
-        } catch (StripeException e) {
-            return ResponseEntity.status(500).build();
-        }
+        List<ProductDTO> products = productService.saveProducts(request);
+        return ResponseEntity.ok(products);
     }
 
     @DeleteMapping("/{id}")

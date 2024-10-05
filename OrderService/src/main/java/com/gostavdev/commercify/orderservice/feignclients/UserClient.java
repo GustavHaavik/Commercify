@@ -1,6 +1,5 @@
 package com.gostavdev.commercify.orderservice.feignclients;
 
-import com.gostavdev.commercify.orderservice.dto.ProductDto;
 import com.gostavdev.commercify.orderservice.dto.UserDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;

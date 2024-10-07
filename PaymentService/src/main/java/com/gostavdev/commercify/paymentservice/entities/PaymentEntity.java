@@ -37,7 +37,6 @@ public class PaymentEntity {
 
     public PaymentEntity(PaymentRequest paymentRequest) {
         this.orderId = paymentRequest.orderId();
-        this.totalAmount = paymentRequest.totalAmount();
         this.paymentProvider = paymentRequest.paymentProvider();
         this.status = PaymentStatus.PENDING;
     }

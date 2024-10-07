@@ -12,6 +12,7 @@ public class OrderLineDTOMapper implements Function<OrderLine, OrderLineDTO> {
     public OrderLineDTO apply(OrderLine orderLine) {
         return new OrderLineDTO(
                 orderLine.getProductId(),
+                orderLine.getStripeProductId(),
                 orderLine.getQuantity(),
                 orderLine.getUnitPrice()
         );

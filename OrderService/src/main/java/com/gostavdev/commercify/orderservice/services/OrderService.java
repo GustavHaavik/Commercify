@@ -5,7 +5,6 @@ import com.gostavdev.commercify.orderservice.dto.ProductDto;
 import com.gostavdev.commercify.orderservice.dto.api.CreateOrderRequest;
 import com.gostavdev.commercify.orderservice.dto.mappers.OrderDTOMapper;
 import com.gostavdev.commercify.orderservice.feignclients.ProductsClient;
-import com.gostavdev.commercify.orderservice.feignclients.UserClient;
 import com.gostavdev.commercify.orderservice.model.Order;
 import com.gostavdev.commercify.orderservice.model.OrderLine;
 import com.gostavdev.commercify.orderservice.model.OrderStatus;
@@ -34,10 +33,6 @@ public class OrderService {
     @Transactional
     public OrderDTO createOrder(CreateOrderRequest request) {
         // TODO Validate the user
-//        UserDTO user = userClient.getUserById(request.userId());
-//        if (user == null) {
-//            throw new RuntimeException("User not found with ID: " + request.userId());
-//        }
 
         Order order = new Order(request.userId());
 
@@ -58,6 +53,7 @@ public class OrderService {
             orderLine.setQuantity(orderLineRequest.quantity());
             orderLine.setUnitPrice(product.unitPrice());
             orderLine.setOrder(order);
+            orderLine.setStripeProductId(product.stripeId());
 
             return orderLine;
         }).collect(Collectors.toList());

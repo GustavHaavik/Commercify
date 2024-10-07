@@ -15,7 +15,8 @@ public class ProductDTOMapper implements Function<ProductEntity, ProductDTO> {
                 product.getDescription(),
                 product.getCurrency(),
                 product.getUnitPrice(),
-                product.getStock()
+                product.getStock(),
+                product.getStripeId()
         );
     }
 }

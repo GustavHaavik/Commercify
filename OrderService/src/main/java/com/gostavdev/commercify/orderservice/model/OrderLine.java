@@ -14,6 +14,8 @@ public class OrderLine {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "orderline_id", nullable = false)
     private Long orderlineId;
+    @Column(name = "stripe_product_id", updatable = false)
+    private String stripeProductId;
 
     @Column(name = "product_id", nullable = false, updatable = false)
     private Long productId;

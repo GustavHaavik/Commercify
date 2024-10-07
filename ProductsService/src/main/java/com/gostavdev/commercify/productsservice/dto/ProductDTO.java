@@ -6,5 +6,6 @@ public record ProductDTO(
         String description,
         String currency,
         Double unitPrice,
-        Integer stock) {
+        Integer stock,
+        String stripeId) {
 }

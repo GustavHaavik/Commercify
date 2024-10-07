@@ -18,9 +18,9 @@ repository [here](https://github.com/gkhaavik/Commercify-Frontend).
 ## Features
 
 - User authentication and authorization
-- Product management (WIP)
-- Order management (WIP)
-- Payment gateway integration (WIP)
+- Product management
+- Order management
+- Payment gateway integration
 - Inventory management (coming soon)
 
 ## Requirements

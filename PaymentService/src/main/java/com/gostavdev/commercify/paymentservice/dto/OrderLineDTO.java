@@ -1,5 +1,4 @@
-package com.gostavdev.commercify.orderservice.dto;
-
+package com.gostavdev.commercify.paymentservice.dto;
 
 public record OrderLineDTO(
         Long productId,

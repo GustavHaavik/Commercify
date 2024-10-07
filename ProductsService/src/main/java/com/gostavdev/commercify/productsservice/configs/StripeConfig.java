@@ -1,4 +1,4 @@
-package com.gostavdev.commercify.paymentservice.config;
+package com.gostavdev.commercify.productsservice.configs;
 
 import com.stripe.Stripe;
 import jakarta.annotation.PostConstruct;
@@ -13,6 +13,6 @@ public class StripeConfig {
 
     @PostConstruct
     public void init() {
-        Stripe.apiKey = stripeApiKey;  // Set your secret key globally in the Stripe SDK
+        Stripe.apiKey = stripeApiKey;
     }
 }

@@ -46,12 +46,4 @@ public class Order {
         this.updatedAt = LocalDateTime.now();
         this.status = status;
     }
-
-    public double calculateTotalPrice() {
-        double total = 0.0;
-        for (OrderLine orderLine : orderLines) {
-            total += orderLine.getQuantity() * orderLine.getUnitPrice();
-        }
-        return total;
-    }
 }

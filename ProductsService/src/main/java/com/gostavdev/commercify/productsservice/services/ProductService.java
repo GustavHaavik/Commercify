@@ -8,6 +8,7 @@ import com.gostavdev.commercify.productsservice.requests.ProductRequest;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Product;
 import com.stripe.param.ProductCreateParams;
+import com.stripe.param.ProductUpdateParams;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -63,8 +64,38 @@ public class ProductService {
         return mapper.apply(savedProduct);
     }
 
-    public void deleteProduct(Long id) {
-        productRepository.deleteById(id);
+    public boolean deleteProduct(Long id, boolean forceDeletion) throws RuntimeException {
+        ProductEntity productEnt = productRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Product not found"));
+
+        Product resource;
+        try {
+            resource = Product.retrieve(productEnt.getStripeId());
+        } catch (StripeException e) {
+            productRepository.deleteById(id);
+            return true;
+        }
+
+        if (forceDeletion) {
+            productRepository.deleteById(id);
+        } else {
+            productEnt.setActive(false);
+            productRepository.save(productEnt);
+        }
+
+        if (!resource.getActive()) {
+            throw new RuntimeException("Product has already been deleted");
+        }
+
+        ProductUpdateParams params =
+                ProductUpdateParams.builder().setActive(false).build();
+
+        try {
+            resource.update(params);
+        } catch (StripeException e) {
+            return false;
+        }
+
+        return true;
     }
 
     public List<ProductDTO> saveProducts(List<ProductRequest> request) {

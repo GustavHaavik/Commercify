@@ -27,8 +27,7 @@ public class ProductEntity {
     private Double unitPrice;
     private Integer stock;
     private String stripeId;
-    @Column(name = "active", nullable = false)
-    private Boolean active = true;
+    private Boolean active;
 
     @CreationTimestamp
     @Column(name = "created_at")

@@ -25,6 +25,10 @@ public class ProductService {
         return productRepository.findAll().stream().map(mapper).toList();
     }
 
+    public List<ProductDTO> getActiveProducts() {
+        return productRepository.queryAllByActiveTrue().stream().map(mapper).toList();
+    }
+
     public ProductDTO getProductById(Long id) {
         return productRepository.findById(id).map(mapper).orElseThrow(() -> new NoSuchElementException("Product not found"));
     }
@@ -36,6 +40,7 @@ public class ProductService {
                 .currency(request.currency())
                 .unitPrice(request.unitPrice())
                 .stock(request.stock())
+                .active(true)
                 .build();
 
         try {

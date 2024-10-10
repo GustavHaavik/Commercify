@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface OrderLineRepository extends JpaRepository<OrderLine, Long> {
     List<OrderLine> findByOrder(Order order);
+
+    void deleteOrderLinesByOrder(Order order);
 }

@@ -5,6 +5,7 @@ import com.gostavdev.commercify.orderservice.dto.ProductDto;
 import com.gostavdev.commercify.orderservice.dto.api.CreateOrderRequest;
 import com.gostavdev.commercify.orderservice.dto.api.OrderLineRequest;
 import com.gostavdev.commercify.orderservice.dto.mappers.OrderDTOMapper;
+import com.gostavdev.commercify.orderservice.feignclients.PaymentsClient;
 import com.gostavdev.commercify.orderservice.feignclients.ProductsClient;
 import com.gostavdev.commercify.orderservice.model.Order;
 import com.gostavdev.commercify.orderservice.model.OrderLine;
@@ -24,7 +25,9 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderLineRepository orderLineRepository;
     private final OrderDTOMapper mapper;
+
     private final ProductsClient productsClient;
+    private final PaymentsClient paymentsClient;
 
     @Transactional
     public List<OrderDTO> getOrdersByUserId(Long userId) {
@@ -83,7 +86,15 @@ public class OrderService {
     @Transactional
     public List<OrderDTO> getAllOrders() {
         List<Order> orders = orderRepository.findAll();
-
         return orders.stream().map(mapper).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void deleteOrder(Long id) {
+        paymentsClient.cancelPayment(id);
+
+        orderLineRepository.deleteOrderLinesByOrder(orderRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found")));
+        orderRepository.deleteById(id);
     }
 }

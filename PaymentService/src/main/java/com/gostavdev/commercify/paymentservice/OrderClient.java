@@ -10,4 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public interface OrderClient {
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     OrderDTO getOrderById(@PathVariable Long id);
+
+    @RequestMapping(method = RequestMethod.PUT, value = "/{id}/status")
+    void updateOrderStatus(@PathVariable Long id, String status);
 }

@@ -3,6 +3,7 @@ package com.gostavdev.commercify.orderservice.services;
 import com.gostavdev.commercify.orderservice.dto.OrderDTO;
 import com.gostavdev.commercify.orderservice.dto.ProductDto;
 import com.gostavdev.commercify.orderservice.dto.api.CreateOrderRequest;
+import com.gostavdev.commercify.orderservice.dto.api.OrderLineRequest;
 import com.gostavdev.commercify.orderservice.dto.mappers.OrderDTOMapper;
 import com.gostavdev.commercify.orderservice.feignclients.ProductsClient;
 import com.gostavdev.commercify.orderservice.model.Order;
@@ -32,31 +33,29 @@ public class OrderService {
 
     @Transactional
     public OrderDTO createOrder(CreateOrderRequest request) {
-        // TODO Validate the user
-
         Order order = new Order(request.userId());
 
-        // Fetch product details and build order lines
-        List<OrderLine> orderLines = request.orderLines().stream().map(orderLineRequest -> {
-            ProductDto product = productsClient.getProductById(orderLineRequest.productId());
+        List<OrderLine> orderLines = request.orderLines().stream()
+                .collect(Collectors.groupingBy(OrderLineRequest::productId))
+                .entrySet().stream()
+                .map(entry -> {
+                    ProductDto product = productsClient.getProductById(entry.getKey());
 
-            if (product == null) {
-                throw new RuntimeException("Product not found with ID: " + orderLineRequest.productId());
-            }
+                    if (product == null) {
+                        throw new RuntimeException("Product not found with ID: " + entry.getKey());
+                    }
 
-            // TODO Validate the quantity and stock
+                    // Create OrderLine entity
+                    OrderLine orderLine = new OrderLine();
+                    orderLine.setProductId(entry.getKey());
+                    orderLine.setProduct(product);
+                    orderLine.setQuantity(entry.getValue().stream().mapToInt(OrderLineRequest::quantity).sum());
+                    orderLine.setUnitPrice(product.unitPrice());
+                    orderLine.setOrder(order);
+                    orderLine.setStripeProductId(product.stripeId());
 
-            // Create OrderLine entity
-            OrderLine orderLine = new OrderLine();
-            orderLine.setProductId(orderLineRequest.productId());
-            orderLine.setProduct(product);
-            orderLine.setQuantity(orderLineRequest.quantity());
-            orderLine.setUnitPrice(product.unitPrice());
-            orderLine.setOrder(order);
-            orderLine.setStripeProductId(product.stripeId());
-
-            return orderLine;
-        }).collect(Collectors.toList());
+                    return orderLine;
+                }).collect(Collectors.toList());
 
         // Create and save Order entity
         order.setOrderLines(orderLines);

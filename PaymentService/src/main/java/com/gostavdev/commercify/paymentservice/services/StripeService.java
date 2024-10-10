@@ -1,29 +1,21 @@
 package com.gostavdev.commercify.paymentservice.services;
 
 import com.gostavdev.commercify.paymentservice.OrderClient;
-import com.gostavdev.commercify.paymentservice.dto.OrderDTO;
-import com.gostavdev.commercify.paymentservice.dto.OrderLineDTO;
-import com.gostavdev.commercify.paymentservice.dto.PaymentRequest;
-import com.gostavdev.commercify.paymentservice.dto.PaymentResponse;
+import com.gostavdev.commercify.paymentservice.PaymentProvider;
+import com.gostavdev.commercify.paymentservice.dto.*;
 import com.gostavdev.commercify.paymentservice.entities.PaymentEntity;
 import com.gostavdev.commercify.paymentservice.entities.PaymentStatus;
 import com.gostavdev.commercify.paymentservice.exceptions.InvalidEventDataException;
 import com.gostavdev.commercify.paymentservice.repositories.PaymentRepository;
-import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
-import com.stripe.model.Event;
 import com.stripe.model.PaymentIntent;
 import com.stripe.model.Product;
-import com.stripe.model.StripeObject;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -69,10 +61,17 @@ public class StripeService {
             Session session = Session.create(params);
 
             // Save the payment in our local database with status "PENDING"
-            PaymentEntity payment = new PaymentEntity(paymentRequest);
+            PaymentEntity payment = PaymentEntity.builder()
+                    .orderId(paymentRequest.orderId())
+                    .stripePaymentIntent(session.getPaymentIntent())
+                    .paymentProvider(PaymentProvider.STRIPE)
+                    .status(PaymentStatus.PAID)
+                    .build();
             paymentRepository.save(payment);
 
             System.out.println("Payment session created: " + session.getUrl());
+
+            orderClient.updateOrderStatus(paymentRequest.orderId(), "CONFIRMED");
 
             // Return the payment intent's client secret for client-side confirmation
             return new PaymentResponse(payment.getPaymentId(), payment.getStatus(), session.getUrl());
@@ -82,36 +81,21 @@ public class StripeService {
         }
     }
 
-    // Handle successful payments
-    public void handlePaymentSucceeded(Event event) {
-        // Extract the PaymentIntent object from the event
-        Optional<StripeObject> dataObject = event.getDataObjectDeserializer().getObject();
-        if (dataObject.isEmpty() || !(dataObject.get() instanceof PaymentIntent paymentIntent))
-            throw new InvalidEventDataException("Invalid event data object");
+    public CancelPaymentResponse cancelPayment(Long paymentId) {
+        PaymentEntity payment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new RuntimeException("Payment not found with ID: " + paymentId));
 
-        Long orderId = Long.parseLong(paymentIntent.getMetadata().get("orderId"));
-
-        // Update payment status in the database
-        Optional<PaymentEntity> paymentOpt = paymentRepository.findByOrderId(orderId);
-        if (paymentOpt.isPresent()) {
-            PaymentEntity payment = paymentOpt.get();
-            payment.setStatus(PaymentStatus.PAID);
-            paymentRepository.save(payment);
+        try {
+            PaymentIntent paymentIntent = PaymentIntent.retrieve(payment.getStripePaymentIntent());
+            paymentIntent.cancel();
+        } catch (StripeException e) {
+            return new CancelPaymentResponse(false, e.getMessage());
         }
-    }
 
-    // Handle failed payments
-    public void handlePaymentFailed(Event event) {
-        PaymentIntent paymentIntent = (PaymentIntent) event.getDataObjectDeserializer().getObject().get();
-        Long orderId = Long.parseLong(paymentIntent.getMetadata().get("orderId"));
+        payment.setStatus(PaymentStatus.CANCELLED);
+        paymentRepository.save(payment);
 
-        // Update payment status in the database
-        Optional<PaymentEntity> paymentOpt = paymentRepository.findByOrderId(orderId);
-        if (paymentOpt.isPresent()) {
-            PaymentEntity payment = paymentOpt.get();
-            payment.setStatus(PaymentStatus.FAILED);
-            paymentRepository.save(payment);
-        }
+        return new CancelPaymentResponse(true, "Payment cancelled successfully");
     }
 }
 

@@ -36,6 +36,7 @@ public class ProductService {
                 .currency(request.currency())
                 .unitPrice(request.unitPrice())
                 .stock(request.stock())
+                .active(true)
                 .build();
 
         try {

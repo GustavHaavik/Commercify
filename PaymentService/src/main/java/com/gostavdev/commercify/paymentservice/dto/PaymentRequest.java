@@ -1,6 +1,6 @@
 package com.gostavdev.commercify.paymentservice.dto;
 
-public record PaymentRequest(Long orderId, String currency, String paymentProvider) {
+public record PaymentRequest(Long orderId, String currency) {
     public String successUrl() {
         return "http://localhost:3000/checkout/success";
     }
